@@ -9,7 +9,7 @@
     "zip-a-folder": "^1.1.0"
   },
   "name": "nicerjs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "nicer/nicer.js",
   "directories": {
     "test": "test"
