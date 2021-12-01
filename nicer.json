@@ -1,0 +1,14 @@
+{
+    "src": "",
+    "build": "build",
+    "compress": false,
+    "exclude": [
+        ".git",
+        "test/src",
+        "node_modules",
+        "nicer",
+        "*.json",
+        "*.zip",
+        "*.tar"
+    ]
+}
