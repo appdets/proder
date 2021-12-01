@@ -25,5 +25,14 @@
   ],
   "author": "iamjafran",
   "license": "ISC",
-  "description": "A tiny lightweigh devOps tool for building production version of development directory smartly"
+  "description": "A tiny lightweigh devOps tool for building production version of development directory smartly",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appdets/nicer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/appdets/nicer/issues"
+  },
+  "homepage": "https://github.com/appdets/nicer#readme"
 }

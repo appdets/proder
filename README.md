@@ -2,6 +2,8 @@
 
 A tiny lightweight DevOps tool for building a production version of development directory smartly
 
+NicerJS simply separates your production version of working directory without garbadge files, source files, modules and confidential files. Rename, move and exclude files 
+
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com) to install NicerJS from your terminal
@@ -37,7 +39,7 @@ or
 ```bash
 $ nicer -b
 ```
-###### Compress
+##### Compress
 ```bash
 $ nicer -b -compress
 ```
@@ -45,14 +47,14 @@ or
 ```bash
 $ nicer -b -c # will compress into zip
 ```
-###### Compress custom format
+##### Compress custom format
 ```bash
 $ nicer -b -compress=tar  # zip|tar|false
 ```
 
 ## Configuration
 
-##### Init configuration
+##### Initialize configuration
 ```bash
 $ nicer --init
 ```
