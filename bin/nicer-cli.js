@@ -33,14 +33,16 @@ class NicerCLI {
 ▒██░   ▓██░░██░▒ ▓███▀ ░░▒████▒░██▓ ▒██▒
 ░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░░░ ▒░ ░░ ▒▓ ░▒▓░
 ░ ░░   ░ ▒░ ▒ ░  ░  ▒    ░ ░  ░  ░▒ ░ ▒░
-   ░   ░ ░  ▒ ░░           ░     ░░   ░ .js
+   ░   ░ ░  ▒ ░░           ░     ░░   ░ js
          ░  ░  ░ ░         ░  ░   ░     
                ░                        
 `),
       },
       {
-        header: "Nicer v1.0",
-        content: `{bold Nicer} is a tiny devOps tools used for building production version of development directory ${chalk.red(
+        header:
+          "NicerJS " +
+          require(path.join(__dirname, "./../package.json")).version,
+        content: `{bold NicerJS} is a tiny devOps tools used for building production version of development directory ${chalk.red(
           "S"
         )} ${chalk.green("M")} ${chalk.blue("A")} ${chalk.yellow(
           "R"
@@ -48,7 +50,7 @@ class NicerCLI {
           `,
       },
       {
-        header: "Options",
+        header: "Commands",
         optionList: [
           {
             name: "help",
@@ -61,14 +63,21 @@ class NicerCLI {
             name: "version",
             alias: "v",
             typeLabel: " ",
-            description: `Run Nicer with root nicer.json or default configuration
+            description: `Run NicerJS with root nicer.json or default configuration
+              `,
+          },
+          {
+            name: "init",
+            alias: "i",
+            typeLabel: " ",
+            description: `Create default {bold {italic nicer.json}} in the root directory of work tree
               `,
           },
           {
             name: "build",
             alias: "b",
             typeLabel: " ",
-            description: `Run Nicer with root {bold nicer.json} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
+            description: `Run NicerJS with root {bold nicer.json} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
               `,
           },
           {
@@ -81,17 +90,21 @@ class NicerCLI {
           },
           {
             name: "compress",
-            type: String,
             typeLabel: "{underline false | zip | tar}",
             description: `Compresses directory into zip. Default is false
+            `,
+          },
+          {
+            name: "force",
+            alias: "f",
+            typeLabel: " ",
+            description: `Make the command forcefully. Only works with nicer --init
             `,
           },
         ],
       },
       {
-        content: `{bold Developed by Jafran Hasan} (${chalk.yellow(
-          "Allahr kosom"
-        )})
+        content: `{bold Developed by Jafran Hasan}
         Me on Facebook https://fb.com/IamJafran
         Send bugs and report at jafraaan@gmail.com`,
       },
@@ -110,7 +123,9 @@ class NicerCLI {
   }
 
   showVersion() {
-    console.log(chalk.yellow(`v1.0`));
+    console.log(
+      chalk.yellow(require(path.join(__dirname, "./../package.json")).version)
+    );
   }
 
   loadConfig(configFilePath = "./nicer.json") {
