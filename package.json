@@ -1,6 +1,6 @@
 {
   "bin": {
-    "nicer": "nicer/nicer-cli.js"
+    "nicer": "bin/nicer-cli.js"
   },
   "devDependencies": { 
     "command-line-args": "^5.2.0",
@@ -8,8 +8,8 @@
     "glob": "^7.2.0",
     "zip-a-folder": "^1.1.0"
   },
-  "name": "nicer",
-  "version": "1.0.0",
+  "name": "nicerjs",
+  "version": "1.0.2",
   "main": "nicer/nicer.js",
   "directories": {
     "test": "test"
@@ -17,7 +17,9 @@
   "scripts": {
     "tets": "nicer -b --compress=false"
   },
-  "keywords": [],
+  "keywords": [
+    "nicer", "nicerjs", "devops", "build"
+  ],
   "author": "iamjafran",
   "license": "ISC",
   "description": "A tiny lightweigh devOps tool for building production version of development directory smartly",

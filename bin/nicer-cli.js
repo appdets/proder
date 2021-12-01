@@ -2,8 +2,8 @@
 const commandLineArgs = require("command-line-args");
 const chalk = require("chalk");
 const path = require("path");
-const Nicer = require("./nicer");
-const { error, success, warning, info } = require("./nicer-fn");
+const Nicer = require("./../nicer/nicer");
+const { error } = require("../nicer/nicer-fn");
 const fs = require("fs");
 const commandLineUsage = require("command-line-usage");
 
