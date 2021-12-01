@@ -2,7 +2,9 @@
 
 A tiny lightweight DevOps tool for building a production version of development directory smartly
 
-NicerJS simply separates your production version of working directory without garbadge files, source files, modules and confidential files. Rename, move and exclude files 
+NicerJS simply separates your production version of working directory without garbadge files, source files, modules and confidential files. Rename, move and exclude files using custom configuration file. You can compress your production into zip / tar too. 
+
+Tada! All everything is in a single command!
 
 ## Installation
 
@@ -41,7 +43,7 @@ $ nicer -b
 ```
 ##### Compress
 ```bash
-$ nicer -b -compress
+$ nicer -b --compress
 ```
 or
 ```bash
@@ -49,7 +51,7 @@ $ nicer -b -c # will compress into zip
 ```
 ##### Compress custom format
 ```bash
-$ nicer -b -compress=tar  # zip|tar|false
+$ nicer -b --compress=tar  # zip|tar|false
 ```
 
 ## Configuration
@@ -57,6 +59,10 @@ $ nicer -b -compress=tar  # zip|tar|false
 ##### Initialize configuration
 ```bash
 $ nicer --init
+``` 
+or 
+```bash
+$ nicer -i
 ```
 Initilizing nicer will create the default configuration JSON file in root directory
 
@@ -89,4 +95,4 @@ Please make sure to update tests as appropriate.
 ##### Published by [Jafran Hasan](https://fb.com/IamJafran), 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://choosealicense.com/licenses/mit/) Public
