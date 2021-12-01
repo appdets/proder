@@ -3,14 +3,15 @@ const path = require("path");
 const { mkdir, readdir, copyFile, lstat } = require("fs/promises");
 const { zip, tar } = require("zip-a-folder");
 const glob = require("glob");
-const { error, success, warning, info } = require("./nicer-fn");
+const { error, success, info } = require("./nicer-fn");
+const chalk = require("chalk");
 
 class Nicer {
   config = false;
 
   defaultConfig() {
     return {
-      src: "test",
+      src: "",
       build: "build",
       compress: {
         extension: "zip",
@@ -23,7 +24,6 @@ class Nicer {
   async getConfig() {
     return this.config || this.defaultConfig();
   }
-  async exists() {}
 
   getFullExcludeList() {
     if (!this.config.exclude || this.config.exclude.length == 0) return false;
@@ -121,7 +121,7 @@ class Nicer {
       return false;
     }
   }
-  async compress() { 
+  async compress() {
     if (this.config.compress) {
       let compressed = false;
       if (this.config.compress.extension === "zip") {
@@ -129,7 +129,7 @@ class Nicer {
           level: this.config.compress.level || "high",
         });
       } else {
-        compressed = await zip(".nicer", this.config.build + ".tar", {
+        compressed = await tar(".nicer", this.config.build + ".tar", {
           level: this.config.compress.level,
         });
       }
@@ -157,7 +157,12 @@ class Nicer {
 
     await this.before();
 
-    await this.copySrc();
+    try {
+      await this.copySrc();
+    } catch (e) {
+      error(e);
+      return;
+    }
 
     await this.excludeList();
 
@@ -167,8 +172,19 @@ class Nicer {
 
     await this.after();
   }
-  async before() {}
-  async after() {}
+  async before() {
+    info("Nicer building..");
+  }
+  async after() {
+    success(
+      `✅ built to.. ` +
+        chalk.italic.bold(
+          this.config.compress
+            ? this.config.build + "." + this.config.compress.extension
+            : this.config.build
+        )
+    );
+  }
 }
 
 module.exports = new Nicer();

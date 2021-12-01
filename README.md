@@ -7,21 +7,33 @@ A tiny lightweight DevOps tool for building a production version of development 
 Use the package manager [npm](https://www.npmjs.com) to install NicerJS from your terminal
 
 ```bash
-$ npm i -g nicerjs
+$ npm install -g nicerjs
 ```
 *Install nicerjs globally to use CLI functionalities*
 
-## Usages
+## Commands
 
 ###### Show help
+```bash
+$ nicer --help
+```
+or
 ```bash
 $ nicer -h
 ```
 ###### Show version
 ```bash
+$ nicer --version
+```
+or 
+```bash
 $ nicer -v
 ```
 #### Build directory
+```bash
+$ nicer --build
+```
+or 
 ```bash
 $ nicer -b
 ```
@@ -29,22 +41,36 @@ $ nicer -b
 ```bash
 $ nicer -b -compress
 ```
+or
+```bash
+$ nicer -b -c # will compress into zip
+```
 ###### Compress custom format
 ```bash
-$ nicer -b -compress=tar #zip|tar|false
+$ nicer -b -compress=tar  # zip|tar|false
 ```
 
 ## Configuration
-default file name should be *nicer.json*
+
+##### Init configuration
+```bash
+$ nicer --init
+```
+Initilizing nicer will create the default configuration JSON file in root directory
+
+If your configuration file is *nicer.json*, then you don't need to mention file path to CLI
+
+
+##### Default configuration
 ```json
 {
-    "src": "",              # path/to/src
-    "build": "build",       # path/to/build
-    "compress": {           # set false to disable compressing
-        "extension": "zip", # zip | tar
-        "level" : "high"    # high | low | medium
+    "src": "",              // path/to/src
+    "build": "build",       // path/to/build
+    "compress": {           // set false to disable compressing
+        "extension": "zip", // zip | tar
+        "level" : "high"    // high | low | medium
      },
-    "exclude": []           # supports regular express
+    "exclude": []           // supports regular express
 }
 ```
 #### Custom Configuration
@@ -52,13 +78,13 @@ default file name should be *nicer.json*
 Supports custom configuration, just mention new configuration file to cli
 ```bash
 $ nicer -b --config=path/to/config
-```
+``` 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-##### Published by [Jafran Hasan](https://fb.com/IamJafran)
+##### Published by [Jafran Hasan](https://fb.com/IamJafran), 
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

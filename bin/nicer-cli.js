@@ -3,8 +3,9 @@ const commandLineArgs = require("command-line-args");
 const chalk = require("chalk");
 const path = require("path");
 const Nicer = require("./../nicer/nicer");
-const { error } = require("../nicer/nicer-fn");
+const { error, success } = require("../nicer/nicer-fn");
 const fs = require("fs");
+const { rm } = require("fs/promises");
 const commandLineUsage = require("command-line-usage");
 
 class NicerCLI {
@@ -13,10 +14,11 @@ class NicerCLI {
       { name: "build", alias: "b", type: Boolean, default: true },
       { name: "version", alias: "v", type: Boolean, default: true },
       { name: "config", alias: "c", default: "" },
-      { name: "timeout", alias: "t", type: Number, default: 0 },
       { name: "help", alias: "h", type: Boolean, default: true },
-      { name: "compress", type: String, default: "zip" },
-      { name: "level", type: String, default: "high" },
+      { name: "compress", alias: "z", type: String, default: "zip" },
+      { name: "level", alias: "l", type: String, default: "high" },
+      { name: "init", alias: "i", type: Boolean },
+      { name: "force", alias: "f", type: Boolean, default: true },
     ];
   }
 
@@ -108,7 +110,7 @@ class NicerCLI {
   }
 
   showVersion() {
-    console.log(`v1.0`);
+    console.log(chalk.yellow(`v1.0`));
   }
 
   loadConfig(configFilePath = "./nicer.json") {
@@ -119,7 +121,25 @@ class NicerCLI {
     return false;
   }
 
-  buildNicer(args) {
+  async initNicerConfig(args) {
+    if ("force" in args) {
+      await rm(path.resolve("nicer.json"));
+    }
+    if (!fs.existsSync(path.resolve("nicer.json"))) {
+      fs.appendFile(
+        path.resolve("nicer.json"),
+        JSON.stringify(Nicer.defaultConfig()),
+        () => {
+          return true;
+        }
+      );
+
+      success("✅ Nicer Initialized");
+    }
+    return true;
+  }
+
+  async buildNicer(args) {
     var config = {};
 
     const configFilePath =
@@ -153,13 +173,16 @@ class NicerCLI {
       }
     }
 
-    Nicer.init(config)
+    Nicer.init(config);
   }
 
   async route(args) {
     switch (true) {
-      case "version" in args && args.version:
+      case "version" in args:
         this.showVersion();
+        break;
+      case "init" in args:
+        this.initNicerConfig(args);
         break;
       case "build" in args:
         this.buildNicer(args);

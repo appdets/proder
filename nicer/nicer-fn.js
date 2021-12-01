@@ -4,18 +4,11 @@ const NicerFunctions = {
   message(color = "other", text) {
     let args = Object.values(arguments).filter((arg, i) => i > 0);
     args = args.map((arg) => {
-      if (typeof arg != "object")
-        return `
-${chalk[color](arg)} 
-`;
+      if (typeof arg != "object") return `${chalk[color](arg)}`;
       else return arg;
     });
 
-    console.log(
-      ...args,
-      `
-    `
-    );
+    console.log(...args, ``);
   },
   warning(...text) {
     NicerFunctions.message("yellow", ...text);
