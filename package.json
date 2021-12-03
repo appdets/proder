@@ -9,8 +9,8 @@
     "zip-a-folder": "^1.1.0"
   },
   "name": "nicerjs",
-  "version": "1.0.5",
-  "main": "nicer/nicer.js",
+  "version": "1.0.6",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
@@ -26,7 +26,6 @@
   "author": "iamjafran",
   "license": "ISC",
   "description": "A tiny lightweigh devOps tool for building production version of development directory smartly",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/appdets/nicer.git"

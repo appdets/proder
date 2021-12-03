@@ -1,10 +1,10 @@
 # NicerJS
 
-A tiny lightweight DevOps tool for building a production version of development directory smartly
+NicerJS is a tiny DevOps tool to build a production version of development directory smartly. (less than 3 kb !)
 
 NicerJS simply separates your production version of working directory without garbadge files, source files, modules and confidential files. Rename, move and exclude files using custom configuration file. You can compress your production into zip / tar too. 
 
-Tada! All everything is in a single command!
+All everything is in a single command!
 
 ## Installation
 
@@ -25,6 +25,7 @@ or
 ```bash
 $ nicer -h
 ```
+
 ###### Show version
 ```bash
 $ nicer --version
@@ -33,6 +34,7 @@ or
 ```bash
 $ nicer -v
 ```
+
 #### Build directory
 ```bash
 $ nicer --build
@@ -41,6 +43,7 @@ or
 ```bash
 $ nicer -b
 ```
+
 ##### Compress
 ```bash
 $ nicer -b --compress
@@ -49,6 +52,7 @@ or
 ```bash
 $ nicer -b -c # will compress into zip
 ```
+
 ##### Compress custom format
 ```bash
 $ nicer -b --compress=tar  # zip|tar|false
@@ -64,21 +68,22 @@ or
 ```bash
 $ nicer -i
 ```
-Initilizing nicer will create the default configuration JSON file in root directory
+Initilizing nicer will create the default configuration file in root directory
 
-If your configuration file is *nicer.json*, then you don't need to mention file path to CLI
+If your configuration file is *nicer.config.js*, then you don't need to mention file path to CLI
 
 
 ##### Default configuration
-```json
-{
+```javascript
+module.exports = {
     "src": "",              // path/to/src
     "build": "build",       // path/to/build
     "compress": {           // set false to disable compressing
         "extension": "zip", // zip | tar
         "level" : "high"    // high | low | medium
      },
-    "exclude": []           // supports regular express
+    "exclude": [],          // supports regular express
+    "move": []             // move or rename directories or files from a two dimensional array
 }
 ```
 #### Custom Configuration
@@ -87,12 +92,23 @@ Supports custom configuration, just mention new configuration file to cli
 ```bash
 $ nicer -b --config=path/to/config
 ``` 
+You can use common_exclude list from NicerJS
+
+```javascript
+const { common_exclude } = require("nicerjs) 
+
+module.exports = { 
+    "build": "build",
+    "exclude": [...common_exclude
+}
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Make a request at [nicerjs](https://github.com/appdets/nicer) on github public repository
 
 Please make sure to update tests as appropriate.
-##### Published by [Jafran Hasan](https://fb.com/IamJafran), 
+##### Published by [Jafran Hasan](https://fb.com/IamJafran) 
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/) Public

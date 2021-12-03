@@ -1,18 +1,18 @@
 const fs = require("fs");
 const path = require("path");
-const { mkdir, readdir, copyFile, lstat } = require("fs/promises");
+const { copyFile } = require("fs/promises");
 const { zip, tar } = require("zip-a-folder");
 const glob = require("glob");
 const { error, success, info } = require("./nicer-fn");
 const chalk = require("chalk");
 
-class Nicer {
+class NicerCore {
   config = false;
 
   defaultConfig() {
     return {
       src: "",
-      build: "build",
+      build: path.basename(path.resolve()),
       compress: {
         extension: "zip",
         level: "high",
@@ -33,9 +33,9 @@ class Nicer {
   }
 
   async copyDir(src, dest) {
-    await mkdir(path.join(dest), { recursive: true });
+    fs.mkdirSync(path.join(dest), { recursive: true });
 
-    let entries = await readdir(src, { withFileTypes: true });
+    let entries = fs.readdirSync(src, { withFileTypes: true });
     for (let entry of entries) {
       let srcPath = path.join(src, entry.name);
       let destPath = path.join(dest, entry.name);
@@ -47,12 +47,17 @@ class Nicer {
             new RegExp(path.resolve(this.config.src + exclud)).test(srcPath) ||
             new RegExp(path.resolve(this.config.src + exclud + "/*")).test(
               srcPath
-            );
+            ) ||
+            path
+              .resolve(this.config.src + srcPath)
+              .startsWith(path.resolve(this.config.src + exclud));
         });
+
         if (isExcludable) continue;
       }
 
       if (entry.name == ".nicer") continue;
+
       entry.isDirectory()
         ? await this.copyDir(srcPath, destPath)
         : await copyFile(srcPath, destPath);
@@ -66,10 +71,15 @@ class Nicer {
       fs.rmSync(".nicer", { recursive: true });
     } catch (e) {}
 
-    return await this.copyDir(
-      path.resolve(this.config.src),
-      path.resolve(".nicer")
-    );
+    try {
+      return await this.copyDir(
+        path.resolve(this.config.src),
+        path.resolve(".nicer")
+      );
+    } catch (e) {
+      error("Directory error!");
+      return;
+    }
   }
 
   path(filepath) {
@@ -80,14 +90,14 @@ class Nicer {
   async excludeList() {
     try {
       if (this.config.exclude && this.config.exclude.length > 0) {
-        this.config.exclude.forEach((exclude) => {
-          glob(`.nicer${this.path(exclude)}`, {}, async (err, files) => {
-            if (files && files.length > 0) {
-              files.forEach(async (file) => {
-                fs.rmSync(file, { recursive: true });
-              });
-            }
-          });
+        this.config.exclude.forEach(async (exclude) => {
+          let files = glob.sync(`.nicer${this.path(exclude)}`);
+
+          if (files && files.length > 0) {
+            files.forEach((file) => {
+              fs.rmSync(file, { recursive: true });
+            });
+          }
         });
 
         return true;
@@ -99,20 +109,21 @@ class Nicer {
   async moveList() {
     try {
       if (this.config.move && this.config.move.length > 0) {
-        this.config.move.forEach((moveItem) => {
+        this.config.move.forEach(async (moveItem) => {
           let moveFrom = `.nicer${this.path(moveItem[0])}`,
             moveTo = `.nicer${this.path(moveItem[1])}`;
-          glob(moveFrom, {}, (err, files) => {
-            if (files && files.length > 0) {
-              files.forEach((file) => {
-                fs.rename(file, moveTo, function (err) {
-                  if (err) throw err;
-                });
-              });
 
-              return true;
-            }
-          });
+          let files = glob.sync(moveFrom);
+
+          if (files && files.length > 0) {
+            files.forEach((file) => {
+              fs.renameSync(file, moveTo, function (err) {
+                if (err) throw err;
+              });
+            });
+
+            return true;
+          }
         });
 
         return true;
@@ -122,34 +133,48 @@ class Nicer {
     }
   }
   async compress() {
-    if (this.config.compress) {
-      let compressed = false;
-      if (this.config.compress.extension === "zip") {
-        compressed = await zip(".nicer", this.config.build + ".zip", {
+    if (!this.config.compress) return false;
+    let compressed = false;
+
+    try {
+      if (
+        this.config.compress.extension &&
+        this.config.compress.extension === "tar"
+      ) {
+        compressed = await tar(".nicer", this.config.build + ".tar", {
           level: this.config.compress.level || "high",
         });
       } else {
-        compressed = await tar(".nicer", this.config.build + ".tar", {
+        compressed = await zip(".nicer", this.config.build + ".zip", {
           level: this.config.compress.level,
         });
       }
 
-      try {
-        fs.rmSync(".nicer", { recursive: true });
-      } catch (e) {}
-
+      fs.rmSync(".nicer", { recursive: true });
       return true;
-    }
-    return false;
-  }
-
-  async moveToBuild() {
-    try {
-      fs.renameSync(path.resolve(".nicer"), path.resolve(this.config.build));
     } catch (e) {
       return false;
     }
-    return true;
+  }
+
+  async moveToBuild() {
+    if (this.config.compress) return;
+    try {
+      if (fs.existsSync(path.resolve(this.config.build))) {
+        fs.rmSync(path.resolve(this.config.build), { recursive: true });
+      }
+
+      return fs.renameSync(
+        path.resolve(".nicer"),
+        path.resolve(this.config.build),
+        {
+          recursive: true,
+        }
+      );
+    } catch (e) {
+      error(e);
+      return false;
+    }
   }
 
   async init(config) {
@@ -164,27 +189,30 @@ class Nicer {
       return;
     }
 
-    await this.excludeList();
+    if (config.exclud && config.exclud.length > 0) await this.excludeList();
 
-    await this.moveList();
+    if (config.move && config.move.length > 0) await this.moveList();
+
+    await this.moveToBuild();
 
     await this.compress();
 
     await this.after();
   }
-  async before() {
-    info("Nicer building..");
-  }
+  async before() {}
   async after() {
     success(
-      `✅ built to.. ` +
-        chalk.italic.bold(
+      `\n✅ Built to ` +
+        chalk.yellow.bold(
           this.config.compress
-            ? this.config.build + "." + this.config.compress.extension
+            ? this.config.build +
+                "." +
+                (this.config.compress.extension || "zip")
             : this.config.build
-        )
+        ) +
+        "\n"
     );
   }
 }
 
-module.exports = new Nicer();
+module.exports = new NicerCore();

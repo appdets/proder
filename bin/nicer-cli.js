@@ -2,11 +2,12 @@
 const commandLineArgs = require("command-line-args");
 const chalk = require("chalk");
 const path = require("path");
-const Nicer = require("./../nicer/nicer");
+const NicerCore = require("./../nicer/nicer");
 const { error, success } = require("../nicer/nicer-fn");
 const fs = require("fs");
 const { rm } = require("fs/promises");
 const commandLineUsage = require("command-line-usage");
+const { common_excludes } = require("..");
 
 class NicerCLI {
   optionDefinitions() {
@@ -25,24 +26,21 @@ class NicerCLI {
   showHelp() {
     const sections = [
       {
-        content: chalk.blue(`
- ███▄    █  ██▓ ▄████▄  ▓█████  ██▀███  
- ██ ▀█   █ ▓██▒▒██▀ ▀█  ▓█   ▀ ▓██ ▒ ██▒
-▓██  ▀█ ██▒▒██▒▒▓█    ▄ ▒███   ▓██ ░▄█ ▒
-▓██▒  ▐▌██▒░██░▒▓▓▄ ▄██▒▒▓█  ▄ ▒██▀▀█▄  
-▒██░   ▓██░░██░▒ ▓███▀ ░░▒████▒░██▓ ▒██▒
-░ ▒░   ▒ ▒ ░▓  ░ ░▒ ▒  ░░░ ▒░ ░░ ▒▓ ░▒▓░
-░ ░░   ░ ▒░ ▒ ░  ░  ▒    ░ ░  ░  ░▒ ░ ▒░
-   ░   ░ ░  ▒ ░░           ░     ░░   ░ js
-         ░  ░  ░ ░         ░  ░   ░     
-               ░                        
-`),
-      },
-      {
         header:
           "NicerJS " +
           require(path.join(__dirname, "./../package.json")).version,
-        content: `{bold NicerJS} is a tiny devOps tools used for building production version of development directory ${chalk.red(
+      },
+      {
+        content: chalk.blue(`
+    #    ##   ###    #####   ######   ######         #   #####   
+    # #   #    #    #        #        #    #         #   #      
+    #  #  #    #    #        #####    ######         #   #####  
+    #   # #    #    #        #        #   #     #    #       #  
+    ##    #   ###    #####   ######   #     #    ####    #####  
+`),
+      },
+      {
+        content: `{bold NicerJS} is a tiny devOps tools, builds production version of development directory ${chalk.red(
           "S"
         )} ${chalk.green("M")} ${chalk.blue("A")} ${chalk.yellow(
           "R"
@@ -63,29 +61,29 @@ class NicerCLI {
             name: "version",
             alias: "v",
             typeLabel: " ",
-            description: `Run NicerJS with root nicer.json or default configuration
+            description: `Run NicerJS with root nicer.config.js or default configuration
               `,
           },
           {
             name: "init",
             alias: "i",
             typeLabel: " ",
-            description: `Create default {bold {italic nicer.json}} in the root directory of work tree
+            description: `Create default {bold {italic nicer.config.js}} in the root directory of work tree
               `,
           },
           {
             name: "build",
             alias: "b",
             typeLabel: " ",
-            description: `Run NicerJS with root {bold nicer.json} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
+            description: `Run NicerJS with root {bold nicer.config.js} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
               `,
           },
           {
             name: "config",
             alias: "c",
             typeLabel: " ",
-            description: `Configuration JSON file path relative to ROOT directory 
-              Example: {bold nicer -c=/path/to/json}
+            description: `Configuration file path relative to ROOT directory 
+              Example: {bold nicer -c=/path/to/config}
               `,
           },
           {
@@ -104,7 +102,7 @@ class NicerCLI {
         ],
       },
       {
-        content: `{bold Developed by Jafran Hasan}
+        content: `{bold Nicely developed by Jafran Hasan}
         Me on Facebook https://fb.com/IamJafran
         Send bugs and report at jafraaan@gmail.com`,
       },
@@ -128,30 +126,41 @@ class NicerCLI {
     );
   }
 
-  loadConfig(configFilePath = "./nicer.json") {
+  loadConfig(configFilePath = "./nicer.config.js") {
     if (fs.existsSync(path.resolve(configFilePath))) {
       let customconfig = require(path.resolve(configFilePath));
-      return Object.assign(Nicer.defaultConfig(), customconfig);
+      return Object.assign(NicerCore.defaultConfig(), customconfig);
     }
     return false;
   }
 
   async initNicerConfig(args) {
-    if ("force" in args) {
-      await rm(path.resolve("nicer.json"));
+    if ("force" in args && fs.existsSync(path.resolve("nicer.config.js"))) {
+      fs.rmSync(path.resolve("nicer.config.js"));
     }
-    if (!fs.existsSync(path.resolve("nicer.json"))) {
-      fs.appendFile(
-        path.resolve("nicer.json"),
-        JSON.stringify(Nicer.defaultConfig()),
+    if (!fs.existsSync(path.resolve("nicer.config.js"))) {
+      const content = NicerCore.defaultConfig();
+
+      fs.appendFileSync(
+        path.resolve("nicer.config.js"),
+        `module.exports = ` + JSON.stringify(content, undefined, 2),
         () => {
           return true;
         }
       );
 
-      success("✅ Nicer Initialized");
+      return success(
+        `\n✅ ${chalk.italic(
+          `Created ${chalk.yellow.bold(`nicer.config.js`)}`
+        )}\n`
+      );
     }
-    return true;
+
+    return console.log(
+      `\n🚫 ${chalk.italic.yellow(
+        `NicerJS configuration file exists!`
+      )} \nRun ${chalk.bold.yellow("nicer -i -f")} to override\n`
+    );
   }
 
   async buildNicer(args) {
@@ -165,9 +174,9 @@ class NicerCLI {
       if (!config)
         return error(`Configuration file ${chalk.bold(path)} doesn't exist`);
     } else {
-      config = this.loadConfig("./nicer.json");
+      config = this.loadConfig("./nicer.config.js");
       if (!config) {
-        config = Nicer.defaultConfig();
+        config = NicerCore.defaultConfig();
       }
     }
 
@@ -188,7 +197,8 @@ class NicerCLI {
       }
     }
 
-    Nicer.init(config);
+    console.log(config);
+    // NicerCore.init(config);
   }
 
   async route(args) {
