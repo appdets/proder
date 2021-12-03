@@ -20,36 +20,28 @@ npm i -g nicerjs
 ###### Show help
 ```bash
 nicer --help
-```
-or
-```bash
+# or
 nicer -h
 ```
 
 ###### Show version
 ```bash
 nicer --version
-```
-or 
-```bash
+# or
 nicer -v
 ```
 
 #### Build directory
 ```bash
 nicer --build
-```
-or 
-```bash
+# or
 nicer -b
 ```
 
 ##### Compress
 ```bash
 nicer -b --compress
-```
-or
-```bash
+# or
 nicer -b -c       #will compress into zip
 ```
 
@@ -63,9 +55,7 @@ nicer -b --compress=tar       # zip|tar|false
 ##### Initialize configuration
 ```bash
 nicer --init
-``` 
-or 
-```bash
+# or
 nicer -i
 ```
 Initilizing nicer will create the default configuration file in root directory
