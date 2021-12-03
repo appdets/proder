@@ -11,9 +11,9 @@ All everything is in a single command!
 Use the package manager [npm](https://www.npmjs.com) to install NicerJS from your terminal
 
 ```bash
-npm install -g nicerjs
+npm i -g nicerjs
 ```
-*Install nicerjs globally to use CLI functionalities*
+*Install nicerjs globally to use CLI functionalities from your terminal*
 
 ## Commands
 
