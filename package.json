@@ -9,7 +9,7 @@
     "zip-a-folder": "^1.1.0"
   },
   "name": "nicerjs",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -24,7 +24,7 @@
     "build"
   ],
   "author": "iamjafran",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A tiny lightweigh devOps tool for building production version of development directory smartly",
   "repository": {
     "type": "git",

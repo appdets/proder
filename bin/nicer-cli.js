@@ -192,9 +192,8 @@ class NicerCLI {
           "level" in args && args.level != "" ? args.level : "high";
       }
     }
-
-    console.log(config);
-    // NicerCore.init(config);
+ 
+    NicerCore.init(config);
   }
 
   async route(args) {
