@@ -2,14 +2,12 @@
 const commandLineArgs = require("command-line-args");
 const chalk = require("chalk");
 const path = require("path");
-const NicerCore = require("./../nicer/nicer");
-const { error, success } = require("../nicer/nicer-fn");
-const fs = require("fs");
-const { rm } = require("fs/promises");
-const commandLineUsage = require("command-line-usage");
-const { common_excludes } = require("..");
+const ProderCore = require("../proder/proder");
+const { error, success } = require("../proder/proder-fn");
+const fs = require("fs"); 
+const commandLineUsage = require("command-line-usage"); 
 
-class NicerCLI {
+class ProderCLI {
   optionDefinitions() {
     return [
       { name: "build", alias: "b", type: Boolean, default: true },
@@ -27,20 +25,20 @@ class NicerCLI {
     const sections = [
       {
         header:
-          "NicerJS v" +
+          "Proder v" +
           require(path.join(__dirname, "./../package.json")).version,
       },
       {
         content: chalk.yellow(`
-    #     #   ###    #####   ######   ######       ###   #####   
-    # #   #    #    #        #        #    #         #   #      
-    #  #  #    #    #        #####    ######         #   #####  
-    #   # #    #    #        #        #   #     #    #       #  
-    #     #   ###    #####   ######   #     #    ####    #####  
+██████  ██████   ██████  ██████  ███████ ██████  
+██   ██ ██   ██ ██    ██ ██   ██ ██      ██   ██ 
+██████  ██████  ██    ██ ██   ██ █████   ██████  
+██      ██   ██ ██    ██ ██   ██ ██      ██   ██ 
+██      ██   ██  ██████  ██████  ███████ ██   ██                                       
 `),
       },
       {
-        content: `{bold NicerJS} is a tiny devOps tools, builds production version of development directory {bold {yellow N} {red I} {green C} {blue L} {grey Y}}. Let it be done for you now.
+        content: `{bold Proder} is a tiny devOps tools, builds production version of development directory {bold {yellow N} {red I} {green C} {blue L} {grey Y}}. Let it be done for you now.
           `,
       },
       {
@@ -57,21 +55,21 @@ class NicerCLI {
             name: "version",
             alias: "v",
             typeLabel: " ",
-            description: `Run NicerJS with root nicer.config.js or default configuration
+            description: `Run Proder with root proder.config.js or default configuration
               `,
           },
           {
             name: "init",
             alias: "i",
             typeLabel: " ",
-            description: `Create default {bold {italic nicer.config.js}} in the root directory of work tree
+            description: `Create default {bold {italic proder.config.js}} in the root directory of work tree
               `,
           },
           {
             name: "build",
             alias: "b",
             typeLabel: " ",
-            description: `Run NicerJS with root {bold nicer.config.js} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
+            description: `Run Proder with root {bold proder.config.js} or default configuration. {bold --build=myDir} will copy directory into {bold myDir} directory
               `,
           },
           {
@@ -79,7 +77,7 @@ class NicerCLI {
             alias: "c",
             typeLabel: " ",
             description: `Configuration file path relative to ROOT directory 
-              Example: {bold nicer -c=/path/to/config}
+              Example: {bold proder -c=/path/to/config}
               `,
           },
           {
@@ -92,15 +90,15 @@ class NicerCLI {
             name: "force",
             alias: "f",
             typeLabel: " ",
-            description: `Make the command forcefully. Only works with nicer --init
+            description: `Make the command forcefully. Only works with proder --init
             `,
           },
         ],
       },
       {
-        content: `{bold Nicely developed by {yellow Jafran Hasan}}
-        Me on Facebook https://fb.com/IamJafran
-        Send bugs and report at jafraaan@gmail.com`,
+        content: `{bold Made with {red ♥} by    Jafran Hasan}
+        {bold Me on Facebook}    https://fb.com/IamJafran
+        {bold Send bugs and     report at} jafraaan@gmail.com`,
       },
     ];
     const usage = commandLineUsage(sections);
@@ -122,23 +120,23 @@ class NicerCLI {
     );
   }
 
-  loadConfig(configFilePath = "./nicer.config.js") {
+  loadConfig(configFilePath = "./proder.config.js") {
     if (fs.existsSync(path.resolve(configFilePath))) {
       let customconfig = require(path.resolve(configFilePath));
-      return Object.assign(NicerCore.defaultConfig(), customconfig);
+      return Object.assign(ProderCore.defaultConfig(), customconfig);
     }
     return false;
   }
 
-  async initNicerConfig(args) {
-    if ("force" in args && fs.existsSync(path.resolve("nicer.config.js"))) {
-      fs.rmSync(path.resolve("nicer.config.js"));
+  async initProderConfig(args) {
+    if ("force" in args && fs.existsSync(path.resolve("proder.config.js"))) {
+      fs.rmSync(path.resolve("proder.config.js"));
     }
-    if (!fs.existsSync(path.resolve("nicer.config.js"))) {
-      const content = NicerCore.defaultConfig();
+    if (!fs.existsSync(path.resolve("proder.config.js"))) {
+      const content = ProderCore.defaultConfig();
 
       fs.appendFileSync(
-        path.resolve("nicer.config.js"),
+        path.resolve("proder.config.js"),
         `module.exports = ` + JSON.stringify(content, undefined, 2),
         () => {
           return true;
@@ -147,19 +145,19 @@ class NicerCLI {
 
       return success(
         `\n✅ ${chalk.italic(
-          `Created ${chalk.yellow.bold(`nicer.config.js`)}`
+          `Created ${chalk.yellow.bold(`proder.config.js`)}`
         )}\n`
       );
     }
 
     return console.log(
       `\n🚫 ${chalk.italic.yellow(
-        `NicerJS configuration file exists!`
-      )} \nRun ${chalk.bold.yellow("nicer -i -f")} to override\n`
+        `Proder configuration file exists!`
+      )} \nRun ${chalk.bold.yellow("proder -i -f")} to override\n`
     );
   }
 
-  async buildNicer(args) {
+  async buildProduction(args) {
     var config = {};
 
     const configFilePath =
@@ -170,9 +168,9 @@ class NicerCLI {
       if (!config)
         return error(`Configuration file ${chalk.bold(path)} doesn't exist`);
     } else {
-      config = this.loadConfig("./nicer.config.js");
+      config = this.loadConfig("./proder.config.js");
       if (!config) {
-        config = NicerCore.defaultConfig();
+        config = ProderCore.defaultConfig();
       }
     }
 
@@ -193,7 +191,7 @@ class NicerCLI {
       }
     }
  
-    NicerCore.init(config);
+    ProderCore.init(config);
   }
 
   async route(args) {
@@ -202,10 +200,10 @@ class NicerCLI {
         this.showVersion();
         break;
       case "init" in args:
-        this.initNicerConfig(args);
+        this.initProderConfig(args);
         break;
       case "build" in args:
-        this.buildNicer(args);
+        this.buildProduction(args);
         break;
       default:
       case "help" in args:
@@ -215,4 +213,4 @@ class NicerCLI {
   }
 }
 
-new NicerCLI().init();
+new ProderCLI().init();

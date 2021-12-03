@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 
-const NicerFunctions = {
+const ProderFunctions = {
   message(color = "other", text) {
     let args = Object.values(arguments).filter((arg, i) => i > 0);
     args = args.map((arg) => {
@@ -11,17 +11,17 @@ const NicerFunctions = {
     console.log(...args, ``);
   },
   warning(...text) {
-    NicerFunctions.message("yellow", ...text);
+    ProderFunctions.message("yellow", ...text);
   },
   error(...text) {
-    NicerFunctions.message("red", ...text);
+    ProderFunctions.message("red", ...text);
   },
   info(...text) {
-    NicerFunctions.message("blue", ...text);
+    ProderFunctions.message("blue", ...text);
   },
   success(...text) {
-    NicerFunctions.message("green", ...text);
+    ProderFunctions.message("green", ...text);
   },
 };
 
-module.exports = NicerFunctions;
+module.exports = ProderFunctions;

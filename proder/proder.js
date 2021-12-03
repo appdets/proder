@@ -3,10 +3,10 @@ const path = require("path");
 const { copyFile } = require("fs/promises");
 const { zip, tar } = require("zip-a-folder");
 const glob = require("glob");
-const { error, success, info } = require("./nicer-fn");
+const { error, success } = require("./proder-fn");
 const chalk = require("chalk");
 
-class NicerCore {
+class ProderCore {
   config = false;
 
   defaultConfig() {
@@ -56,7 +56,7 @@ class NicerCore {
         if (isExcludable) continue;
       }
 
-      if (entry.name == ".nicer") continue;
+      if (entry.name == ".proder") continue;
 
       entry.isDirectory()
         ? await this.copyDir(srcPath, destPath)
@@ -68,16 +68,16 @@ class NicerCore {
 
   async copySrc() {
     try {
-      fs.rmSync(".nicer", { recursive: true });
+      fs.rmSync(".proder", { recursive: true });
     } catch (e) {}
 
     try {
       return await this.copyDir(
         path.resolve(this.config.src),
-        path.resolve(".nicer")
+        path.resolve(".proder")
       );
     } catch (e) {
-      error("Directory error!");
+      error("Directory error!", e);
       return;
     }
   }
@@ -90,7 +90,7 @@ class NicerCore {
   async excludeList() {
     try {
       this.config.exclude.forEach(async (exclude) => {
-        let files = glob.sync(`.nicer${this.path(exclude)}`);
+        let files = glob.sync(`.proder${this.path(exclude)}`);
 
         if (files && files.length > 0) {
           files.forEach((file) => {
@@ -107,8 +107,8 @@ class NicerCore {
   async moveList() {
     try {
       this.config.move.forEach(async (moveItem) => {
-        let moveFrom = `.nicer${this.path(moveItem[0])}`,
-          moveTo = `.nicer${this.path(moveItem[1])}`;
+        let moveFrom = `.proder${this.path(moveItem[0])}`,
+          moveTo = `.proder${this.path(moveItem[1])}`;
 
         let files = glob.sync(moveFrom);
 
@@ -135,16 +135,16 @@ class NicerCore {
         this.config.compress.extension &&
         this.config.compress.extension === "tar"
       ) {
-        compressed = await tar(".nicer", this.config.build + ".tar", {
+        compressed = await tar(".proder", this.config.build + ".tar", {
           level: this.config.compress.level || "high",
         });
       } else {
-        compressed = await zip(".nicer", this.config.build + ".zip", {
+        compressed = await zip(".proder", this.config.build + ".zip", {
           level: this.config.compress.level,
         });
       }
 
-      fs.rmSync(".nicer", { recursive: true });
+      fs.rmSync(".proder", { recursive: true });
       return true;
     } catch (e) {
       return false;
@@ -159,7 +159,7 @@ class NicerCore {
       }
 
       return fs.renameSync(
-        path.resolve(".nicer"),
+        path.resolve(".proder"),
         path.resolve(this.config.build),
         {
           recursive: true,
@@ -209,4 +209,4 @@ class NicerCore {
   }
 }
 
-module.exports = new NicerCore();
+module.exports = new ProderCore();

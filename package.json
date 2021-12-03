@@ -1,6 +1,6 @@
 {
   "bin": {
-    "nicer": "bin/nicer-cli.js"
+    "proder": "bin/proder-cli.js"
   },
   "dependencies": {
     "command-line-args": "^5.2.0",
@@ -8,18 +8,17 @@
     "glob": "^7.2.0",
     "zip-a-folder": "^1.1.0"
   },
-  "name": "nicerjs",
-  "version": "1.0.8",
+  "name": "proder",
+  "version": "1.0.0",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
-  "scripts": {
-    "tets": "nicer -b --compress=false"
-  },
+  "scripts": {},
   "keywords": [
-    "nicer",
-    "nicerjs",
+    "proder",
+    "production",
+    "prod",
     "devops",
     "build"
   ],
@@ -28,10 +27,10 @@
   "description": "A tiny lightweigh devOps tool for building production version of development directory smartly",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/appdets/nicer.git"
+    "url": "git+https://github.com/appdets/proder.git"
   },
   "bugs": {
-    "url": "https://github.com/appdets/nicer/issues"
+    "url": "https://github.com/appdets/proder/issues"
   },
-  "homepage": "https://github.com/appdets/nicer#readme"
+  "homepage": "https://github.com/appdets/proder#readme"
 }

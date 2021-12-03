@@ -1,6 +1,6 @@
 const path = require("path");
 
-class Nicer {
+class Proder {
   common_excludes = [
     ".git",
     ".gitignore",
@@ -10,10 +10,10 @@ class Nicer {
     "node_modules",
     "webpack*.js",
     "tailwind*.js",
-    "nicer.config.js",
+    "proder.config.js",
     path.basename(path.resolve()) + ".zip",
     path.basename(path.resolve()) + ".tar",
   ];
 }
 
-module.exports = new Nicer();
+module.exports = new Proder();
