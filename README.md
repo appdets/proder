@@ -92,14 +92,14 @@ Supports custom configuration, just mention new configuration file to cli
 ```bash
 nicer -b --config=path/to/config
 ``` 
-You can use common_exclude list from NicerJS
+You can use common_excludes list from NicerJS
 
 ```javascript
-const { common_exclude } = require("nicerjs) 
+const { common_excludes } = require("nicerjs) 
 
 module.exports = { 
     "build": "build",
-    "exclude": [...common_exclude]
+    "exclude": [...common_excludes]
 }
 ```
 
