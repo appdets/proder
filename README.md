@@ -99,7 +99,7 @@ const { common_exclude } = require("nicerjs)
 
 module.exports = { 
     "build": "build",
-    "exclude": [...common_exclude
+    "exclude": [...common_exclude]
 }
 ```
 
