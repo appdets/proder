@@ -27,24 +27,20 @@ class NicerCLI {
     const sections = [
       {
         header:
-          "NicerJS " +
+          "NicerJS v" +
           require(path.join(__dirname, "./../package.json")).version,
       },
       {
-        content: chalk.blue(`
-    #    ##   ###    #####   ######   ######         #   #####   
+        content: chalk.yellow(`
+    #     #   ###    #####   ######   ######       ###   #####   
     # #   #    #    #        #        #    #         #   #      
     #  #  #    #    #        #####    ######         #   #####  
     #   # #    #    #        #        #   #     #    #       #  
-    ##    #   ###    #####   ######   #     #    ####    #####  
+    #     #   ###    #####   ######   #     #    ####    #####  
 `),
       },
       {
-        content: `{bold NicerJS} is a tiny devOps tools, builds production version of development directory ${chalk.red(
-          "S"
-        )} ${chalk.green("M")} ${chalk.blue("A")} ${chalk.yellow(
-          "R"
-        )} ${chalk.cyan("L")} ${chalk.white("Y")}
+        content: `{bold NicerJS} is a tiny devOps tools, builds production version of development directory {bold {yellow N} {red I} {green C} {blue L} {grey Y}}. Let it be done for you now.
           `,
       },
       {
@@ -102,7 +98,7 @@ class NicerCLI {
         ],
       },
       {
-        content: `{bold Nicely developed by Jafran Hasan}
+        content: `{bold Nicely developed by {yellow Jafran Hasan}}
         Me on Facebook https://fb.com/IamJafran
         Send bugs and report at jafraaan@gmail.com`,
       },
@@ -122,7 +118,7 @@ class NicerCLI {
 
   showVersion() {
     console.log(
-      chalk.yellow(require(path.join(__dirname, "./../package.json")).version)
+      chalk.yellow('v'  + require(path.join(__dirname, "./../package.json")).version)
     );
   }
 
