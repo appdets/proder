@@ -73,17 +73,25 @@ Initilizing nicer will create the default configuration file in root directory
 If your configuration file is *nicer.config.js*, then you don't need to mention file path to CLI
 
 
-##### Default configuration
+##### Configuration explaination
 ```javascript
 module.exports = {
-    "src": "",              // path/to/src
-    "build": "build",       // path/to/build
-    "compress": {           // set false to disable compressing
-        "extension": "zip", // zip | tar
-        "level" : "high"    // high | low | medium
+    "src": "",                  // path to root working directory, "" means current directory; default is ""
+    "build": "build",           // path to build directory or compressed file name; default is current directory name
+    "compress": {               // set false to disable compressing; default is true
+        "extension": "zip",     // zip | tar ; default is zip
+        "level" : "high"        // high | low | medium; default is high
      },
-    "exclude": [],          // supports regular express
-    "move": []              // move or rename directories or files from a two dimensional array
+    "exclude": [                // exclude files and directory from build; default is []
+        "node_modules",
+        ".git",
+        "src/scss/*"            // supports regular expression
+    ],          
+    "move": [                   // move or rename directories or files; default is []
+        [
+            "from/path/block.js", "to/path/index.js"
+        ] 
+    ]              
 }
 ```
 #### Custom Configuration
