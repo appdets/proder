@@ -11,7 +11,7 @@ All everything is in a single command!
 Use the package manager [npm](https://www.npmjs.com) to install NicerJS from your terminal
 
 ```bash
-$ npm install -g nicerjs
+npm install -g nicerjs
 ```
 *Install nicerjs globally to use CLI functionalities*
 
@@ -19,54 +19,54 @@ $ npm install -g nicerjs
 
 ###### Show help
 ```bash
-$ nicer --help
+nicer --help
 ```
 or
 ```bash
-$ nicer -h
+nicer -h
 ```
 
 ###### Show version
 ```bash
-$ nicer --version
+nicer --version
 ```
 or 
 ```bash
-$ nicer -v
+nicer -v
 ```
 
 #### Build directory
 ```bash
-$ nicer --build
+nicer --build
 ```
 or 
 ```bash
-$ nicer -b
+nicer -b
 ```
 
 ##### Compress
 ```bash
-$ nicer -b --compress
+nicer -b --compress
 ```
 or
 ```bash
-$ nicer -b -c # will compress into zip
+nicer -b -c       #will compress into zip
 ```
 
 ##### Compress custom format
 ```bash
-$ nicer -b --compress=tar  # zip|tar|false
+nicer -b --compress=tar       # zip|tar|false
 ```
 
 ## Configuration
 
 ##### Initialize configuration
 ```bash
-$ nicer --init
+nicer --init
 ``` 
 or 
 ```bash
-$ nicer -i
+nicer -i
 ```
 Initilizing nicer will create the default configuration file in root directory
 
@@ -83,14 +83,14 @@ module.exports = {
         "level" : "high"    // high | low | medium
      },
     "exclude": [],          // supports regular express
-    "move": []             // move or rename directories or files from a two dimensional array
+    "move": []              // move or rename directories or files from a two dimensional array
 }
 ```
 #### Custom Configuration
 
 Supports custom configuration, just mention new configuration file to cli
 ```bash
-$ nicer -b --config=path/to/config
+nicer -b --config=path/to/config
 ``` 
 You can use common_exclude list from NicerJS
 
