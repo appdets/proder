@@ -89,45 +89,39 @@ class NicerCore {
 
   async excludeList() {
     try {
-      if (this.config.exclude && this.config.exclude.length > 0) {
-        this.config.exclude.forEach(async (exclude) => {
-          let files = glob.sync(`.nicer${this.path(exclude)}`);
+      this.config.exclude.forEach(async (exclude) => {
+        let files = glob.sync(`.nicer${this.path(exclude)}`);
 
-          if (files && files.length > 0) {
-            files.forEach((file) => {
-              fs.rmSync(file, { recursive: true });
-            });
-          }
-        });
+        if (files && files.length > 0) {
+          files.forEach((file) => {
+            fs.rmSync(file, { recursive: true });
+          });
 
-        return true;
-      }
+          return true;
+        }
+      });
     } catch (e) {
       return false;
     }
   }
   async moveList() {
     try {
-      if (this.config.move && this.config.move.length > 0) {
-        this.config.move.forEach(async (moveItem) => {
-          let moveFrom = `.nicer${this.path(moveItem[0])}`,
-            moveTo = `.nicer${this.path(moveItem[1])}`;
+      this.config.move.forEach(async (moveItem) => {
+        let moveFrom = `.nicer${this.path(moveItem[0])}`,
+          moveTo = `.nicer${this.path(moveItem[1])}`;
 
-          let files = glob.sync(moveFrom);
+        let files = glob.sync(moveFrom);
 
-          if (files && files.length > 0) {
-            files.forEach((file) => {
-              fs.renameSync(file, moveTo, function (err) {
-                if (err) throw err;
-              });
+        if (files && files.length > 0) {
+          files.forEach((file) => {
+            fs.renameSync(file, moveTo, function (err) {
+              if (err) throw err;
             });
+          });
 
-            return true;
-          }
-        });
-
-        return true;
-      }
+          return true;
+        }
+      });
     } catch (e) {
       return false;
     }
@@ -189,7 +183,7 @@ class NicerCore {
       return;
     }
 
-    if (config.exclud && config.exclud.length > 0) await this.excludeList();
+    if (config.exclude && config.exclude.length > 0) await this.excludeList();
 
     if (config.move && config.move.length > 0) await this.moveList();
 
