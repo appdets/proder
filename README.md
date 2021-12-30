@@ -11,7 +11,7 @@ All everything is in a single command!
 Use the package manager [npm](https://www.npmjs.com) to install Proder from your terminal
 
 ```bash
-npm i -g Proder
+npm i -g proder
 ```
 *Install Proder globally to use CLI functionalities from your terminal*
 
